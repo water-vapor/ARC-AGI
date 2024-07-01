@@ -22,6 +22,9 @@
                 <br />
                 <input type="file" class="load_task"/>
                 <button onclick="randomTask()" id="random_task_btn">Random task</button>
+                <br />
+                <input type="number" id="task_number" value="0" />
+                <button onclick="loadTaskFromInput()" id="load_task_btn">Load task</button>
             </div>
         </div>
         <div id="workspace">
@@ -48,6 +51,11 @@
                         <input type="file" id="load_task_file_input" class="load_task" style="display: none;"/>
                         <input type="button" value="Browse..." onclick="document.getElementById('load_task_file_input').click();" />
                         <button onclick="randomTask()" id="random_task_btn"> Random... </button>
+                        <button onclick="loadNextTask()"> Next Task</button>
+                        <button onclick="loadPreviousTask()"> Previous Task</button>
+                        <p>
+                        <input type="number" id="task_number_activated" value="0" />
+                        <button onclick="loadTaskFromInputActivated()" id="load_task_btn">Load task</button>
                         <p>
                         <label id='task_name' for="random_task_btn"> Task name: </label>
                         <p>

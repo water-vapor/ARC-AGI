@@ -11,6 +11,9 @@ var EDITION_GRID_HEIGHT = 500;
 var EDITION_GRID_WIDTH = 500;
 var MAX_CELL_SIZE = 100;
 
+// custom
+var current_task_index = 0;
+
 
 function resetTask() {
     CURRENT_INPUT_GRID = new Grid(3, 3);
@@ -177,6 +180,8 @@ function randomTask() {
     var subset = "training";
     $.getJSON("https://api.github.com/repos/fchollet/ARC/contents/data/" + subset, function(tasks) {
         var task_index = Math.floor(Math.random() * tasks.length)
+        current_task_index = parseInt(task_index);
+        document.getElementById('task_number_activated').value = task_index;
         var task = tasks[task_index];
         $.getJSON(task["download_url"], function(json) {
             try {
@@ -190,6 +195,51 @@ function randomTask() {
             //$('#load_task_file_input')[0].value = "";
             infoMsg("Loaded task training/" + task["name"]);
             display_task_name(task['name'], task_index, tasks.length);
+        })
+        .error(function(){
+          errorMsg('Error loading task');
+        });
+    })
+    .error(function(){
+      errorMsg('Error loading task list');
+    });
+}
+
+function loadTaskFromInput(){
+    var n = document.getElementById('task_number').value;
+    loadTask(n);
+}
+
+function loadTaskFromInputActivated(){
+    var n = document.getElementById('task_number_activated').value;
+    loadTask(n);
+}
+
+function loadNextTask() {
+    loadTask(parseInt(current_task_index) + 1);
+}
+
+function loadPreviousTask() {
+    loadTask(parseInt(current_task_index) - 1);
+}
+
+function loadTask(n, subset="training") {
+    current_task_index = n;
+    document.getElementById('task_number_activated').value = n;
+    $.getJSON("https://api.github.com/repos/fchollet/ARC/contents/data/" + subset, function(tasks) {
+        var task = tasks[n];
+        $.getJSON(task["download_url"], function(json) {
+            try {
+                train = json['train'];
+                test = json['test'];
+            } catch (e) {
+                errorMsg('Bad file format');
+                return;
+            }
+            loadJSONTask(train, test);
+            //$('#load_task_file_input')[0].value = "";
+            infoMsg("Loaded task training/" + task["name"]);
+            display_task_name(task['name'], n, tasks.length);
         })
         .error(function(){
           errorMsg('Error loading task');
