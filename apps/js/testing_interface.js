@@ -90,6 +90,13 @@ function copyFromInput() {
     $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
 }
 
+function copyFromSolution() {
+    syncFromEditionGridToDataGrid();
+    CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(TEST_PAIRS[CURRENT_TEST_PAIR_INDEX]['output']);
+    syncFromDataGridToEditionGrid();
+    $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
+}
+
 function fillPairPreview(pairId, inputGrid, outputGrid) {
     var pairSlot = $('#pair_preview_' + pairId);
     if (!pairSlot.length) {
